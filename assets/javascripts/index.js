@@ -1,37 +1,16 @@
-function supportsCrypto() {
-  return window.crypto && crypto.subtle && window.TextEncoder;
-}
+navigator.getUserMedia = navigator.getUserMedia ||
+                         navigator.webkitGetUserMedia ||
+                         navigator.mozGetUserMedia;
 
-function hex(buff) {
-  return [].map.call(new Uint8Array(buff), b => ('00' + b.toString(16)).slice(-2)).join('');
-}
+function recordVideo(videoLength) {
+  return new Promise(function(resolve, reject) {
+    var mediaData = [];
+    var userMediaOptions = {
+      audio: true,
+      video: true
+    };
 
-function hash(algo, str) {
-  return crypto.subtle.digest(algo, new TextEncoder().encode(str));
-}
-
-if (!supportsCrypto()) {
-  alert('This browser does not suport the Web Crypto API.');
-}
-navigator.getUserMedia =
-  navigator.getUserMedia ||
-  navigator.webkitGetUserMedia ||
-  navigator.mozGetUserMedia;
-
-if (!navigator.getUserMedia) {
-  alert('This browser does not suport the User Media API.');
-}
-
-$(document).on('keydown', function(e) {
-  $('#keys').append(e.key);
-});
-
-function record(done) {
-  var mediaData = [];
-
-  navigator.getUserMedia(
-    { audio: true, video: true },
-    function(stream) {
+    navigator.getUserMedia(userMediaOptions, function(stream) {
       var recorder = new MediaRecorder(stream);
 
       recorder.addEventListener('dataavailable', function(event) {
@@ -40,59 +19,91 @@ function record(done) {
 
       recorder.addEventListener('stop', function() {
         var buffer = new Blob(mediaData);
-        document.getElementById('video').src =
-          window.URL.createObjectURL(buffer);
+        var videoSrc = window.URL.createObjectURL(buffer);
+
+        document.getElementById('video').src = videoSrc;
       });
 
       recorder.start();
 
       setTimeout(function() {
         recorder.stop();
+
         setTimeout(function() {
-          done(mediaData);
-        }, 500);
-      }, 5000);
-    },
-    alert
-  );
-}
-
-function generatePassword(done) {
-  var formElement = document.getElementById('options');
-  var formData = new FormData(formElement);
-  var passwordLength = formData.get('password-length');
-  var p = /[a-zA-Z\d#?!@$%^&*-]/;
-
-  record(function(mediaData) {
-    new Response(mediaData[0]).arrayBuffer().then(function(buff) {
-      var s = '';
-      var byteOffset = Math.pow(2, 10);
-      var array = (new Uint8Array(buff)).slice(byteOffset);
-
-      _.each(array, function(b) {
-        let c = String.fromCharCode(b);
-        if (p.test(c)) {
-          s += c;
-        }
-        if (s.length >= passwordLength) {
-          return false;
-        }
-      });
-
-      done(s);
-    });
+          resolve(mediaData);
+        }, 100);
+      }, videoLength * 1000);
+    }, reject);
   });
 }
 
-$('#submit-button').on('click', function() {
-  var submitButtonElement = $(this);
-  var passwordElement = $('#password');
+function randIndex(array) {
+  return Math.floor(Math.random() * array.length);
+}
 
-  passwordElement.toggleClass('d-none', true).val('');
-  submitButtonElement.prop('disabled', true);
+function generatePassword() {
+  var formData = new FormData(document.getElementById('options'));
+  var videoLength = +formData.get('video-length');
+  var passwordLength = +formData.get('password-length');
+  var charsetPattern = /[a-zA-Z\d#?!@$%^&*-]/;
 
-  generatePassword(function(password) {
-    passwordElement.val(password).toggleClass('d-none', false);
-    submitButtonElement.prop('disabled', false);
+  console.log({
+    'video-length': videoLength,
+    'password-length': passwordLength
+  });
+
+  return new Promise(function(resolve, reject) {
+    recordVideo(videoLength).then(function(mediaData) {
+      new Response(mediaData[0]).arrayBuffer().then(function(buff) {
+        var password = '';
+        var array = new Uint8Array(buff);
+        var done = false;
+
+        while (!done) {
+          let i = randIndex(array);
+          let b = array[i];
+          let c = String.fromCharCode(b);
+
+          if (charsetPattern.test(c)) {
+            password += c;
+          }
+
+          done = password.length >= passwordLength;
+        }
+
+        resolve(password);
+      }, reject);
+    }, reject);
+  });
+}
+
+$(document).ready(function() {
+  if (!navigator.getUserMedia) {
+    alert('This browser does not support the Media Devices API.');
+    return;
+  }
+
+  var documentElem = $(this);
+  var submitElem = $('#submit-button');
+  var passwordElem = $('#password');
+
+  submitElem.on('click', function() {
+    passwordElem.toggleClass('d-none', true).val('');
+    submitElem
+      .prop('disabled', true)
+      .toggleClass('btn-danger', false)
+      .toggleClass('btn-success', true)
+      .text('Recording...');
+
+    generatePassword().then(function(password) {
+      passwordElem.val(password).toggleClass('d-none', false);
+      submitElem
+        .prop('disabled', false)
+        .toggleClass('btn-danger', true)
+        .toggleClass('btn-secondary', false)
+        .text('Start Recording');
+
+      documentElem.scrollTop(0);
+    }, console.error);
   });
 });
