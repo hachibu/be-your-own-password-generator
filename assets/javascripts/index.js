@@ -92,7 +92,7 @@ $(document).ready(function() {
     submitElem
       .prop('disabled', true)
       .toggleClass('btn-danger', false)
-      .toggleClass('btn-success', true)
+      .toggleClass('btn-warning', true)
       .text('Recording...');
 
     generatePassword().then(function(password) {
@@ -100,7 +100,7 @@ $(document).ready(function() {
       submitElem
         .prop('disabled', false)
         .toggleClass('btn-danger', true)
-        .toggleClass('btn-secondary', false)
+        .toggleClass('btn-warning', false)
         .text('Start Recording');
 
       documentElem.scrollTop(0);
