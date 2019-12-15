@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "dependencies": {
-    "http-server": "0.11.1"
+    "http-server": "0.12.0"
   },
   "scripts": {
     "start": "http-server -o"
