@@ -37,8 +37,14 @@ function recordVideo(videoLength) {
   });
 }
 
-function randIndex(array) {
-  return Math.floor(Math.random() * array.length);
+function randIndex(length) {
+  const crypto = window.crypto || window.msCrypto;
+  let min = (-length >>> 0) % length;
+  let randNum = new Uint32Array(1);
+  do {
+    var x = crypto.getRandomValues(randNum);
+  } while (x < min)
+  return x % length;
 }
 
 function generatePassword() {
@@ -60,7 +66,7 @@ function generatePassword() {
         var done = false;
 
         while (!done) {
-          let i = randIndex(array);
+          let i = randIndex(array.length);
           let b = array[i];
           let c = String.fromCharCode(b);
 
