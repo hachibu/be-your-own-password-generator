@@ -1,3 +1,4 @@
+window.crypto = window.crypto || window.msCrypto;
 navigator.getUserMedia = navigator.getUserMedia ||
                          navigator.webkitGetUserMedia ||
                          navigator.mozGetUserMedia;
@@ -38,12 +39,15 @@ function recordVideo(videoLength) {
 }
 
 function randIndex(length) {
-  const crypto = window.crypto || window.msCrypto;
+  // modulo with discard method
   let min = (-length >>> 0) % length;
   let randNum = new Uint32Array(1);
+  let x;
+
   do {
-    var x = crypto.getRandomValues(randNum);
-  } while (x < min)
+    x = window.crypto.getRandomValues(randNum);
+  } while (x < min);
+
   return x % length;
 }
 
@@ -52,11 +56,6 @@ function generatePassword() {
   var videoLength = +formData.get('video-length');
   var passwordLength = +formData.get('password-length');
   var charsetPattern = /[a-zA-Z\d#?!@$%^&*-]/;
-
-  console.log({
-    'video-length': videoLength,
-    'password-length': passwordLength
-  });
 
   return new Promise(function(resolve, reject) {
     recordVideo(videoLength).then(function(mediaData) {
@@ -86,6 +85,11 @@ function generatePassword() {
 $(document).ready(function() {
   if (!navigator.getUserMedia) {
     alert('This browser does not support the Media Devices API.');
+    return;
+  }
+
+  if (!window.crypto) {
+    alert('This browser does not support the Web Crypto API.');
     return;
   }
 
