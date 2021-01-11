@@ -4,7 +4,7 @@ class App extends React.Component {
       {
         title: 'What is this?',
         description: <span>
-          This is an experimental password generator that uses a video of you to
+          This is an experimental password generator written in ReactJS that uses a video of you to
           generate a random password. You can find more details on my <a className="text-white font-weight-bold"
                                                                          style={{textDecoration: 'underline'}}
                                                                          href="https://hachibu.net/posts/2019/be-your-own-password-generator/"
