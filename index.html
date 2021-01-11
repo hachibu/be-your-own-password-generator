@@ -1,113 +1,21 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Be Your Own Password Generator</title>
-
-  <link href="assets/images/favicon.png" rel="icon" type="image/png">
-  <link href="assets/stylesheets/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/stylesheets/main.css" rel="stylesheet">
-</head>
-<body class="bg-dark mt-5" style="overflow-y: scroll">
-  <div class="container">
-    <div class="row mb-4 pl-3 pr-3">
-      <input id="password" class="d-none w-100 p-4 alert alert-success form-control" type="text" style="font-size: 30px">
-    </div>
-
-    <div class="row">
-      <div class="col mb-4">
-        <div class="text-white mb-4 h-100">
-          <h1 class="mb-5">
-            Be Your Own<br>Password Generator
-          </h1>
-
-          <details open>
-            <summary>
-              <b>What is this?</b>
-            </summary>
-            <p class="text-light">
-              This is an experimental password generator that uses a video of you to generate a random password.
-              You can find more details on my <a class="text-white font-weight-bold" style="text-decoration: underline" href="https://hachibu.net/posts/2019/be-your-own-password-generator/" target="_blank">blog</a>.
-            </p>
-          </details>
-
-          <details class="mb-4">
-            <summary>
-              <b>How does this work?</b>
-            </summary>
-            <p class="text-light">
-              It records a short video of you and then transforms that raw video
-              data into an array of 8-bit unsigned integers. Then it randomly
-              selects an integer from that array and transforms it into its
-              corresponding UTF-16 character. If that character is a lowercase
-              letter, uppercase letter, digit or special character it will be used
-              for your password. The process of selecting a random character
-              continues until the password is long enough.
-            </p>
-          </details>
-
-          <details class="mb-4">
-            <summary>
-              <b>Is the video saved anywhere?</b>
-            </summary>
-            <p class="text-light">
-              The video is only stored temporarily in your browser for playback
-              purposes. The video will dissapear as soon as you close or refresh
-              this page.
-            </p>
-          </details>
-
-          <details class="mb-4">
-            <summary>
-              <b>Is it safe to use these passwords?</b>
-            </summary>
-            <p>
-              I would strongly suggest that you do not use these passwords.
-              I haven't run any proper entropy tests on the generated passwords.
-              So, I can't confirm or deny the actual strength of these passwords.
-              Please keep using your password manager to generate passwords.
-            </p>
-          </details>
-        </div>
-      </div><!-- .col -->
-
-      <div class="col">
-        <div class="bg-white rounded p-4 mb-4">
-          <form id="options" class="mb-4">
-            <div class="form-group row mb-2">
-              <label class="col-sm-9 col-form-label">
-                Video Recording Length
-                <small class="text-muted">(seconds)</small>
-              </label>
-              <div class="col-sm-3">
-                <input class="form-control" name="video-length" type="number" min="1" max="30" value="2">
-              </div>
-            </div>
-
-            <div class="form-group row mb-4">
-              <label class="col-sm-9 col-form-label">Password Length</label>
-              <div class="col-sm-3">
-                <input class="form-control" name="password-length" type="number" min="1" max="128" value="32">
-              </div>
-            </div>
-
-            <div class="d-flex justify-content-center">
-              <button id="submit-button" type="button"
-                      class="text-white btn btn-success w-50">
-                <b>
-                  Start Recording
-                </b>
-              </button>
-            </div>
-          </form>
-
-          <video id="video" controls class="rounded border bg-light w-100" style="height: 300px"></video>
-        </div>
-      </div><!-- .col -->
-    </div><!-- .row -->
-  </div><!-- .container -->
-
-  <script src="assets/javascripts/jquery.slim.min.js"></script>
-  <script src="assets/javascripts/index.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <title>Be Your Own Password Generator</title>
+    <link href="assets/images/favicon.png" rel="icon" type="image/png">
+    <link href="assets/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/stylesheets/main.css" rel="stylesheet">
+  </head>
+  <body class="bg-dark mt-5">
+    <div id="root"></div>
+    <script>
+      window.crypto = window.crypto || window.msCrypto;
+      navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    </script>
+    <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script type="text/babel" src="assets/javascripts/index.js"></script>
+  </body>
 </html>
