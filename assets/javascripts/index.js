@@ -54,11 +54,11 @@ class App extends React.Component {
   }
 
   handleRecordingStart = () => {
-    this.setState({ ...this.state, showPassword: false });
+    this.setState({ showPassword: false });
   }
 
   handleRecordingEnd = (password) => {
-    this.setState({ ...this.state, password, showPassword: true });
+    this.setState({ password, showPassword: true });
   }
 
   render() {
