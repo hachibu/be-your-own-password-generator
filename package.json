@@ -2,7 +2,7 @@
   "name": "be-your-own-password-generator",
   "version": "1.0.0",
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
     "http-server": "0.12.3"
   },
   "scripts": {
