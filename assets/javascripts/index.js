@@ -114,19 +114,19 @@ function DetailsComponent(props) {
 function VideoRecordingComponent(props) {
   const recordVideo = (videoLength) => {
     return new Promise((resolve, reject) => {
-      var mediaData = [];
-      var userMediaOptions = {
+      let mediaData = [];
+      let userMediaOptions = {
         audio: true,
         video: true
       };
       navigator.getUserMedia(userMediaOptions, (stream) => {
-        var recorder = new MediaRecorder(stream);
+        let recorder = new MediaRecorder(stream);
         recorder.addEventListener('dataavailable', (event) => {
           mediaData.push(event.data);
         });
         recorder.addEventListener('stop', () => {
-          var buffer = new Blob(mediaData);
-          var videoSrc = window.URL.createObjectURL(buffer);
+          let buffer = new Blob(mediaData);
+          let videoSrc = window.URL.createObjectURL(buffer);
           document.getElementById('video').src = videoSrc;
         });
         recorder.start();
@@ -141,7 +141,6 @@ function VideoRecordingComponent(props) {
   };
 
   const randIndex = (length) => {
-    // modulo with discard method
     let min = (-length >>> 0) % length;
     let randNum = new Uint32Array(1);
     let x;
@@ -152,16 +151,17 @@ function VideoRecordingComponent(props) {
   };
 
   const generatePassword = () => {
-    var formData = new FormData(document.getElementById('options'));
-    var videoLength = +formData.get('video-length');
-    var passwordLength = +formData.get('password-length');
-    var charsetPattern = /[a-zA-Z\d#?!@$%^&*-]/;
+    let formData = new FormData(document.getElementById('options'));
+    let videoLength = parseInt(formData.get('video-length'), 10);
+    let passwordLength = parseInt(formData.get('password-length'), 10);
+    let charsetPattern = /[a-zA-Z\d#?!@$%^&*-]/;
+
     return new Promise((resolve, reject) => {
       recordVideo(videoLength).then(mediaData => {
         new Response(mediaData[0]).arrayBuffer().then(buff => {
-          var password = '';
-          var array = new Uint8Array(buff);
-          var done = false;
+          let password = '';
+          let array = new Uint8Array(buff);
+          let done = false;
           while (!done) {
             let i = randIndex(array.length);
             let b = array[i];
@@ -178,6 +178,7 @@ function VideoRecordingComponent(props) {
   };
 
   const [isRecording, setRecording] = React.useState(false);
+
   const startRecording = () => {
     setRecording(true);
     props.onRecordingStart(password);
@@ -195,13 +196,13 @@ function VideoRecordingComponent(props) {
           <small className="text-muted">(seconds)</small>
         </label>
         <div className="col-sm-3">
-          <input readOnly className="form-control" name="video-length" type="number" min="1" max="30" value="2" />
+          <input className="form-control" name="video-length" type="number" min="1" max="30" defaultValue="2" />
         </div>
       </div>
       <div className="form-group row mb-4">
         <label className="col-sm-9 col-form-label">Password Length</label>
         <div className="col-sm-3">
-          <input readOnly className="form-control" name="password-length" type="number" min="1" max="128" value="32" />
+          <input className="form-control" name="password-length" type="number" min="1" max="128" defaultValue="32" />
         </div>
       </div>
       <div className="d-flex justify-content-center mb-4">
