@@ -96,7 +96,7 @@ class App extends React.Component {
 
 function DetailsComponent(props) {
   return (
-    <div>
+    <React.Fragment>
       {props.details.map((detail, i) => (
         <details key={i} open={detail.open} className={i > 0 ? 'mb-4' : ''}>
           <summary>
@@ -107,7 +107,7 @@ function DetailsComponent(props) {
           </p>
         </details>
       ))}
-    </div>
+    </React.Fragment>
   );
 }
 
