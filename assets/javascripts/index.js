@@ -49,10 +49,6 @@ class App extends React.Component {
     showPassword: false
   }
 
-  constructor(props) {
-    super(props)
-  }
-
   handleRecordingStart = () => {
     this.setState({ showPassword: false });
   }
@@ -75,9 +71,7 @@ class App extends React.Component {
         <div className="row">
           <div className="col mb-4">
             <div className="text-white mb-4 h-100">
-              <h1 className="mb-5">
-                Be Your Own Password Generator
-              </h1>
+              <h1 className="mb-5">Be Your Own Password Generator</h1>
               <DetailsComponent details={this.state.details} />
             </div>
           </div>
@@ -99,17 +93,23 @@ function DetailsComponent(props) {
     <React.Fragment>
       {props.details.map((detail, i) => (
         <details key={i} open={detail.open} className={i > 0 ? 'mb-4' : ''}>
-          <summary>
-            <b>{detail.title}</b>
-          </summary>
-          <p className="text-light">
-            {detail.description}
-          </p>
+          <summary><b>{detail.title}</b></summary>
+          <p className="text-light">{detail.description}</p>
         </details>
       ))}
     </React.Fragment>
   );
 }
+
+DetailsComponent.propTypes = {
+  details: PropTypes.arrayOf(
+    PropTypes.exact({
+      title: PropTypes.string.isRequired,
+      description: PropTypes.element.isRequired,
+      open: PropTypes.bool.isRequired,
+    })
+  ),
+};
 
 function VideoRecordingComponent(props) {
   const recordVideo = (videoLength) => {
@@ -221,6 +221,11 @@ function VideoRecordingComponent(props) {
     </form>
   );
 }
+
+VideoRecordingComponent.propTypes = {
+  onRecordingStart: PropTypes.func,
+  onRecordingEnd: PropTypes.func,
+};
 
 if (!navigator.getUserMedia) {
   alert('This browser does not support the Media Devices API.');
