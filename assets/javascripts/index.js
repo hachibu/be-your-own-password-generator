@@ -1,3 +1,19 @@
+function AppReducer(state, action) {
+  switch (action.type) {
+    case 'recordingStart':
+      return { ...state, showPassword: false };
+    case 'recordingEnd':
+      return { password: action.value, showPassword: true };
+    default:
+      throw new Error();
+  }
+}
+
+let AppInitialState = {
+  password: '',
+  showPassword: false
+};
+
 function App() {
   let details = [
     {
@@ -44,24 +60,23 @@ function App() {
       open: false
     },
   ];
-  let [password, setPassword] = React.useState('');
-  let [showPassword, setShowPassword] = React.useState(false);
+
+  let [state, dispatch] = React.useReducer(AppReducer, AppInitialState);
 
   function handleRecordingStart() {
-    setShowPassword(false);
+    dispatch({ type: 'recordingStart' });
   }
 
   function handleRecordingEnd(password) {
-    setPassword(password);
-    setShowPassword(true);
+    dispatch({ type: 'recordingEnd', value: password });
   }
 
   return (
     <div className="container">
       <div className="row mb-4 pl-3 pr-3">
         <input id="password"
-               defaultValue={password}
-               className={`w-100 p-4 alert alert-success form-control ${showPassword ? 'd-block': 'd-none'}`}
+               defaultValue={state.password}
+               className={`w-100 p-4 alert alert-success form-control ${state.showPassword ? 'd-block': 'd-none'}`}
                type="text"
                style={{fontSize: '30px'}} />
       </div>
