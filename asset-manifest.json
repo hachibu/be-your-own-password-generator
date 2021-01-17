@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/be-your-own-password-generator/static/css/main.832d960f.chunk.css",
-    "main.js": "/be-your-own-password-generator/static/js/main.1e93b4fe.chunk.js",
-    "main.js.map": "/be-your-own-password-generator/static/js/main.1e93b4fe.chunk.js.map",
+    "main.js": "/be-your-own-password-generator/static/js/main.21dbe115.chunk.js",
+    "main.js.map": "/be-your-own-password-generator/static/js/main.21dbe115.chunk.js.map",
     "runtime-main.js": "/be-your-own-password-generator/static/js/runtime-main.a46d8013.js",
     "runtime-main.js.map": "/be-your-own-password-generator/static/js/runtime-main.a46d8013.js.map",
     "static/css/2.43b2b750.chunk.css": "/be-your-own-password-generator/static/css/2.43b2b750.chunk.css",
@@ -18,6 +18,6 @@
     "static/css/2.43b2b750.chunk.css",
     "static/js/2.f90175d0.chunk.js",
     "static/css/main.832d960f.chunk.css",
-    "static/js/main.1e93b4fe.chunk.js"
+    "static/js/main.21dbe115.chunk.js"
   ]
 }
