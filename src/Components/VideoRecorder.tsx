@@ -72,6 +72,7 @@ const VideoRecorder: FC<VideoRecorderProps> = (props) => {
         props.onRecordingEnd(password)
       },
       (error) => {
+        alert(error)
         setRecording(false)
       }
     )

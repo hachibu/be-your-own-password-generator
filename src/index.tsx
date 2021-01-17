@@ -7,6 +7,8 @@ import { Provider } from 'react-redux'
 
 if (!navigator?.mediaDevices?.getUserMedia) {
   alert('This browser does not support the Media Devices API.')
+} else if (!window.MediaRecorder) {
+  alert('This browser does not support the Media Recorder API.')
 } else if (!crypto) {
   alert('This browser does not support the Web Crypto API.')
 } else {
