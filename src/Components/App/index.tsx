@@ -1,29 +1,8 @@
-import React from 'react';
-import Details from './Details'
-import VideoRecorder from './VideoRecorder'
-
+import React, { useReducer } from 'react';
+import appReducer, { startRecording, endRecording } from './slice'
+import Details from '../Details'
+import VideoRecorder from '../VideoRecorder'
 import './App.css';
-
-interface IAppState {
-  password: string
-  showPassword: boolean
-}
-
-interface IAppAction {
-  type: string
-  value: string
-}
-
-function AppReducer(state: IAppState, action: IAppAction) {
-  switch (action.type) {
-    case 'recordingStart':
-      return { ...state, showPassword: false }
-    case 'recordingEnd':
-      return { password: action.value, showPassword: true }
-    default:
-      throw new Error()
-  }
-}
 
 function App() {
   let details = [
@@ -73,17 +52,17 @@ function App() {
     },
   ];
 
-  let [state, dispatch] = React.useReducer(AppReducer, {
+  let [state, dispatch] = useReducer(appReducer, {
     password: '',
     showPassword: false
   });
 
   function handleRecordingStart() {
-    dispatch({ type: 'recordingStart', value: '' });
+    dispatch(startRecording())
   }
 
   function handleRecordingEnd(password: string) {
-    dispatch({ type: 'recordingEnd', value: password });
+    dispatch(endRecording(password))
   }
 
   return (

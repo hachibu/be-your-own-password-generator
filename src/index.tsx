@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-
 import 'bootstrap/dist/css/bootstrap.css'
-
-import App from './App'
+import App from './components/App'
+import appStore from './components/App/store'
+import { Provider } from 'react-redux'
 
 if (!navigator?.mediaDevices?.getUserMedia) {
   alert('This browser does not support the Media Devices API.')
@@ -12,7 +12,9 @@ if (!navigator?.mediaDevices?.getUserMedia) {
 } else {
   ReactDOM.render(
     <React.StrictMode>
-      <App />
+      <Provider store={appStore}>
+        <App />
+      </Provider>
     </React.StrictMode>,
     document.getElementById('root')
   )
