@@ -1,10 +1,18 @@
-import React, { useReducer } from 'react';
-import appReducer, { startRecording, endRecording } from './slice'
+import React, { FC } from 'react'
+import { connect, useSelector } from 'react-redux'
+import { IAppState, startRecording, endRecording } from './appSlice'
 import Details from '../Details'
 import VideoRecorder from '../VideoRecorder'
-import './App.css';
+import './App.css'
 
-function App() {
+interface IAppProps {
+  startRecording: () => void
+  endRecording: (password: string) => void
+}
+
+const App: FC<IAppProps> = ({ startRecording, endRecording }) => {
+  let password = useSelector((state: IAppState) => state.password)
+  let showPassword = useSelector((state: IAppState) => state.showPassword)
   let details = [
     {
       title: 'What is this?',
@@ -52,25 +60,12 @@ function App() {
     },
   ];
 
-  let [state, dispatch] = useReducer(appReducer, {
-    password: '',
-    showPassword: false
-  });
-
-  function handleRecordingStart() {
-    dispatch(startRecording())
-  }
-
-  function handleRecordingEnd(password: string) {
-    dispatch(endRecording(password))
-  }
-
   return (
     <div className="container">
       <div className="row mb-4 pl-3 pr-3">
         <input name="password"
-               defaultValue={state.password}
-               className={`w-100 p-4 alert alert-success form-control ${state.showPassword ? 'd-block': 'd-none'}`}
+               defaultValue={password}
+               className={`w-100 p-4 alert alert-success form-control ${showPassword ? 'd-block': 'd-none'}`}
                type="text"
                style={{fontSize: '30px'}} />
       </div>
@@ -91,13 +86,13 @@ function App() {
 
         <div className="col">
           <div className="bg-white rounded p-4 mb-4">
-            <VideoRecorder onRecordingStart={handleRecordingStart}
-                           onRecordingEnd={handleRecordingEnd} />
+            <VideoRecorder onRecordingStart={startRecording}
+                           onRecordingEnd={endRecording} />
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default connect(null, { startRecording, endRecording })(App)

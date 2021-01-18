@@ -1,13 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export const appSlice = createSlice({
+export interface IAppState {
+  password: string
+  showPassword: boolean
+}
+
+const appSlice = createSlice({
   name: 'app',
   initialState: {
     password: '',
     showPassword: false
   },
   reducers: {
-    startRecording: state => {
+    startRecording: (state) => {
       state.showPassword = false
     },
     endRecording: (state, action) => {
@@ -17,6 +22,6 @@ export const appSlice = createSlice({
   }
 })
 
-export const { startRecording, endRecording } = appSlice.actions;
+export const { startRecording, endRecording } = appSlice.actions
 
-export default appSlice.reducer;
+export default appSlice.reducer
